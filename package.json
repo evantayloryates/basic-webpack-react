@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A starter template for a basic React SPA bundled using Webpack 5",
   "main": "index.js",
-  "homepage": "https://evantayloryates.github.io/basic-webpack-react",
+  "homepage": "nkeylabs.com",
   "scripts": {
     "serve": "webpack serve --mode development",
     "build": "webpack --mode production",
