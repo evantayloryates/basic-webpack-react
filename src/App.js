@@ -1,10 +1,10 @@
 import React from "react"
+import HomePage from "./pages/Home.jsx"
 
-function App() {
-    return (<div>
-        <h2>Welcome to React App</h2>
-        <h3>Date : {new Date().toDateString()}</h3>
-    </div>)
+const App = () => {
+    return (
+      <HomePage />
+    )
 }
 
 export default App
