@@ -1,9 +1,13 @@
-import React from "react"
-import HomePage from "./pages/Home.jsx"
+import React from 'react';
+
+import BasicPage from '~/layers/Basic.jsx';
+import MainPage from '~/layers/Main.jsx';
+
 
 const App = () => {
     return (
-      <HomePage />
+      <BasicPage />
+      // <MainPage />
     )
 }
 
