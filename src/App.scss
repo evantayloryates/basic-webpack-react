@@ -805,6 +805,16 @@ $form-input-line-height: 1;
   }
 }
 
-.mobile #contact-form > button[type="submit"] {
-  font-weight: 500;
+.mobile #contact-form {
+
+  & > button[type="submit"] {
+    font-weight: 500;
+    height: 40px;
+  }
+  & > textarea,
+  & > input { 
+    line-height: 26px;
+    font-size: 1.1em;
+    caret-color: #c3b0cd;
+  }
 }

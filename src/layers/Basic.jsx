@@ -4,7 +4,7 @@ import emailjs from '@emailjs/browser';
 
 
 const Basic = () => {
-  const [activeIndex, setActiveIndex] = useState(3);
+  const [activeIndex, setActiveIndex] = useState(0);
   const [targetIndex, setTargetIndex] = useState(null);
   const [contactFormLoading, setContactFormLoading] = useState(false);
 
