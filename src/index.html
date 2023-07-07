@@ -5,7 +5,38 @@
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"> -->
       <script src="https://kit.fontawesome.com/ef1cd45daf.js" crossorigin="anonymous"></script>
-      <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+      <script async defer src="https://apis.google.com/js/api.js"></script>
+      <script>
+      window.handleClientLoad = function() {
+          window.gapi.load('client:auth2', initClient);
+      }
+
+      function initClient() {
+          gapi.client.init({
+              clientId: "388498590624-30g1olannucusb9gnhlop2f7chgik9km.apps.googleusercontent.com",
+              discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"],
+              scope: "https://www.googleapis.com/auth/gmail.send"
+          }).then(function () {
+              // Handle the initial sign-in state.
+              updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+          });
+      }
+
+      function updateSigninStatus(isSignedIn) {
+          if (isSignedIn) {
+              // User is signed in.
+              console.log('SIGNED IN!');
+              // Now you can use gapi.client.gmail.* APIs
+          } else {
+              // User is not signed in. Start sign-in flow.
+              gapi.auth2.getAuthInstance().signIn();
+          }
+      }
+
+      // The code below ensures handleClientLoad function is called after the gapi script is loaded
+      var gapiScript = document.querySelector('script[src="https://apis.google.com/js/api.js"]');
+      gapiScript.onload = handleClientLoad;
+      </script>
       <title>NKEY Labs</title>
       <link href="styles.css" rel="stylesheet">
       <link rel="icon" type="image/png" sizes="64x64" href="./images/favicon-64.png">

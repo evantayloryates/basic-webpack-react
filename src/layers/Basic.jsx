@@ -1,38 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDeviceInfo } from '../hooks/index';
 
-const clientId = "388498590624-30g1olannucusb9gnhlop2f7chgik9km.apps.googleusercontent.com";
-const discoveryDocs = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
-const scope = "https://www.googleapis.com/auth/gmail.send";
-
-function handleClientLoad() {
-    // Load the API client and auth2 library
-    window.gapi.load('client:auth2', initClient);
-}
-
-function initClient() {
-    window.gapi.client.init({
-        clientId: clientId,
-        discoveryDocs: discoveryDocs,
-        scope: scope
-    }).then(function () {
-         // Listen for sign-in state changes.
-         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-         // Handle the initial sign-in state.
-         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-    });
-}
-
-function updateSigninStatus(isSignedIn) {
-  if (isSignedIn) {
-      // User is signed in.
-      // Now you can use gapi.client.gmail.* APIs
-  } else {
-      // User is not signed in. Start sign-in flow.
-      gapi.auth2.getAuthInstance().signIn();
-  }
-}
 
 const sendEmail = () => {
   const emailContent =
