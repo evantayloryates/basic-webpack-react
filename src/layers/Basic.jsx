@@ -1,30 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDeviceInfo } from '../hooks/index';
+import emailjs from '@emailjs/browser';
 
-
-const sendEmail = () => {
-  const emailContent =
-  `To: taylor@nkeylabs.com
-  Subject: Test Email
-  Content-Type: text/plain; charset=utf-8
-
-  This is a test email from your React Application.`;
-
-  const base64EncodedEmail = btoa(emailContent).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-
-  const request = window.gapi.client.gmail.users.messages.send({
-      'userId': 'me',
-      'resource': {
-          'raw': base64EncodedEmail
-      }
-  });
-
-  request.execute(response => console.log(response));
-}
 
 const Basic = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(3);
   const [targetIndex, setTargetIndex] = useState(null);
+  const [contactFormLoading, setContactFormLoading] = useState(false);
+
+  const [successToastActive, setSuccessToastActive] = useState(false);
 
   function scrollToPage(index) {
     const pages = document.querySelectorAll('.bpage-container'); // Assuming each page has a class of "page"
@@ -32,6 +16,24 @@ const Basic = () => {
     if (index >= 0 && index < pages.length) {
       pages[index].scrollIntoView({ behavior: 'smooth' });
     }
+  }
+
+  const handleSuccess = (evt, res) => {
+    evt.target.reset();
+    setSuccessToastActive(p => true);
+    setInterval(() => {
+      setSuccessToastActive(p => false);
+    }, 5000)
+
+  }
+
+  const sendEmail = (e) => {
+    e.preventDefault();
+    
+    setContactFormLoading(true);
+    emailjs.sendForm('nkey-email-client', 'nkey-public-contact-form', e.target, 'gf7mYyCUkILOQTGHL')
+    .then((res) => handleSuccess(e, res))
+    .finally(() => setContactFormLoading(false))
   }
 
   const handleScroll = (evt) => {
@@ -43,6 +45,7 @@ const Basic = () => {
   }
 
   useEffect(() => {
+    scrollToPage(activeIndex);
     const scrollerElement = document.getElementById('scroller');
 
     scrollerElement.addEventListener('scroll', handleScroll);
@@ -65,13 +68,15 @@ const Basic = () => {
   const effectiveIndex = targetIndex === null ? activeIndex : targetIndex;
 
   const { isMobile } = useDeviceInfo()
+  // const isMobile = true;
   const pathSource = './images/nkey-logo-504x144.png';
   const [width, height] = isMobile ? ['322','92'] : ['504','144'];
 
-
-handleClientLoad();
   return (
     <div className={`bcontent ${isMobile ? 'mobile' : ''}`} id="scroller">
+      <div className={`success-toast ${successToastActive ? 'active' : ''}`}>
+        Email sent <i className="fa-solid fa-check fa-lg"></i>
+      </div>
       <div className={`bmenu-container ${effectiveIndex === 0 ? 'hidden' : ''}`}>
         <ul className='bmenu'>
           <li className={effectiveIndex === 1 ? 'active' : ''} onClick={() => updatePage(1)}>Services</li>
@@ -104,9 +109,22 @@ handleClientLoad();
         <p>an example text box</p>
       </div>
       <div className="bpage-container">
-        <h1>Contact</h1>
-        <p>an example text box</p>
-        <button onClick={sendEmail}>Email</button>
+        <h1>Let’s connect</h1>
+        <form id="contact-form" className={contactFormLoading ? 'loading' : ''} onSubmit={sendEmail}>
+          <label htmlFor="name">Name <sup>*</sup></label>
+          <input type="text" id="name" name="name" required />
+          <br/>
+
+          <label htmlFor="email">Email <sup>*</sup></label>
+          <input type="email" id="email" name="email" required />
+          <br/>
+
+          <label htmlFor="message">Message <sup>*</sup></label>
+          <textarea id="message" name="message" rows="4" required></textarea>
+          <br/>
+
+          <button type="submit" value="Submit">Submit</button>
+        </form>
       </div>
       <div className='bfooter-container'>
         <p className='footer-text'>&copy; 2023 NKEY Labs, LLC. All rights reserved.</p>
