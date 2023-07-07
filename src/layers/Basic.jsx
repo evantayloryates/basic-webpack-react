@@ -45,7 +45,7 @@ const Basic = () => {
   const effectiveIndex = targetIndex === null ? activeIndex : targetIndex;
 
   const { isMobile } = useDeviceInfo()
-  const pathSource = isMobile ? './images/nkey-logo-322x92.png' : './images/nkey-logo-504x144.png';
+  const pathSource = './images/nkey-logo-504x144.png';
   const [width, height] = isMobile ? ['322','92'] : ['504','144'];
 
   return (
