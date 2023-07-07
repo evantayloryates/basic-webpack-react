@@ -1,6 +1,58 @@
 import React, { useEffect, useState } from 'react';
 import { useDeviceInfo } from '../hooks/index';
 
+const clientId = "388498590624-30g1olannucusb9gnhlop2f7chgik9km.apps.googleusercontent.com";
+const discoveryDocs = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+const scope = "https://www.googleapis.com/auth/gmail.send";
+
+function handleClientLoad() {
+    // Load the API client and auth2 library
+    window.gapi.load('client:auth2', initClient);
+}
+
+function initClient() {
+    window.gapi.client.init({
+        clientId: clientId,
+        discoveryDocs: discoveryDocs,
+        scope: scope
+    }).then(function () {
+         // Listen for sign-in state changes.
+         gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+         // Handle the initial sign-in state.
+         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+    });
+}
+
+function updateSigninStatus(isSignedIn) {
+  if (isSignedIn) {
+      // User is signed in.
+      // Now you can use gapi.client.gmail.* APIs
+  } else {
+      // User is not signed in. Start sign-in flow.
+      gapi.auth2.getAuthInstance().signIn();
+  }
+}
+
+const sendEmail = () => {
+  const emailContent =
+  `To: taylor@nkeylabs.com
+  Subject: Test Email
+  Content-Type: text/plain; charset=utf-8
+
+  This is a test email from your React Application.`;
+
+  const base64EncodedEmail = btoa(emailContent).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  const request = window.gapi.client.gmail.users.messages.send({
+      'userId': 'me',
+      'resource': {
+          'raw': base64EncodedEmail
+      }
+  });
+
+  request.execute(response => console.log(response));
+}
 
 const Basic = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -48,6 +100,8 @@ const Basic = () => {
   const pathSource = './images/nkey-logo-504x144.png';
   const [width, height] = isMobile ? ['322','92'] : ['504','144'];
 
+
+handleClientLoad();
   return (
     <div className={`bcontent ${isMobile ? 'mobile' : ''}`} id="scroller">
       <div className={`bmenu-container ${effectiveIndex === 0 ? 'hidden' : ''}`}>
@@ -84,6 +138,7 @@ const Basic = () => {
       <div className="bpage-container">
         <h1>Contact</h1>
         <p>an example text box</p>
+        <button onClick={sendEmail}>Email</button>
       </div>
       <div className='bfooter-container'>
         <p className='footer-text'>&copy; 2023 NKEY Labs, LLC. All rights reserved.</p>
